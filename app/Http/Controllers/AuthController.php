@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -11,7 +12,7 @@ class AuthController extends Controller
             $email = $request->json('email');
             $pwd=$request->json('password');
             $credentials = ['email'=>$email,'password'=>$pwd];
-            if(!Auth::attempts($credentials)){
+            if(!Auth::attempt($credentials)){
                 return response()->json(['error'=>'The providedcredentials are incorrect. '], 401);
             }
 
@@ -32,11 +33,14 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $user = $request->user();
-        $user->token()->delete();
+        $user->tokens()->delete();
 
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
     }
 
+    public function unauthorized(){
+        return response()->json(['error' =>'Unauthorized access.'], 401);
+    }
 }
