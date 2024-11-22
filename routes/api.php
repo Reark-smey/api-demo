@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProduitController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -11,3 +13,9 @@ Route::get('/user', function (Request $request) {
 Route::get('/produits', [ProduitController::class, "liste"]);
 
 Route::get('/produits/{id}', [ProduitController::class, "details"]);
+
+Route::POST('/ajoutcommande/{id}/{idproduit}/{qte}', [CommandeController::class, "ajoutcommande"]);
+Route::POST('/ajoutcommande', [CommandeController::class, "ajouterCommandeJSON"]);
+
+Route::post('/login',[AuthController::class, "login"]);
+Route::get('/logout',[AuthController::class, "logout"])->middleware('auth:sanctum');
