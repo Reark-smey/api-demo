@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Client;
 use App\Models\Commande;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ProduitController;
+use App\Models\Produit;
 
 class CommandeController extends Controller
 {
@@ -27,5 +30,29 @@ class CommandeController extends Controller
         $commande->save();
 
         return response()->json(['status'=>'commande créée','data'=>$commande]);
+    }
+
+    public function listerCommandes($idClient){
+
+        $commandes = Client::find($idClient)->commandes()->get();
+        return response()->json([$commandes]);
+    }
+
+    public function listerCommandesProduits(Request $request){
+        $idclient=$request->json('idClient');
+        $commande = Client::find($idclient)->commandes()->with('Produit')->get();
+
+        return response()->json([$commande]);
+    }
+
+    public function supprimerCommande(Request $request){
+        try{
+        $idcommande = $request->json('idCommande');
+        Commande::destroy($idcommande);
+        $success = "La suppression a été réussi de la commande numéro : ".$idcommande." a réussi";
+        return $success;
+    }catch(\Exception $e){
+            $erreur = $e->getMessage();
+        }
     }
 }

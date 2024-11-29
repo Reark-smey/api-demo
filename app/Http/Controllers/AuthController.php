@@ -13,7 +13,7 @@ class AuthController extends Controller
             $pwd=$request->json('password');
             $credentials = ['email'=>$email,'password'=>$pwd];
             if(!Auth::attempt($credentials)){
-                return response()->json(['error'=>'The providedcredentials are incorrect. '], 401);
+                return response()->json(['error'=>'The provided credentials are incorrect. '], 401);
             }
 
             $user = $request->user();
@@ -43,4 +43,5 @@ class AuthController extends Controller
     public function unauthorized(){
         return response()->json(['error' =>'Unauthorized access.'], 401);
     }
+
 }

@@ -21,3 +21,13 @@ Route::post('/login',[AuthController::class, "login"]);
 Route::get('/logout',[AuthController::class, "logout"])->middleware('auth:sanctum');
 
 Route::get('/unauthorized', [AuthController::class,"unauthorized"])->name('login');
+
+Route::get('ListeCommandeClient', [CommandeController::class,"ListeCommandeClient"])->middleware('auth:sanctum');
+
+Route::get('commandes/{idClient}', [CommandeController::class,"listerCommandes"])->middleware('auth:sanctum');
+
+Route::get('commandes', [CommandeController::class, "listerCommandesProduits"])->middleware("auth:sanctum");
+
+Route::DELETE('suppcommande', [CommandeController::class, "supprimerCommande"])->middleware("auth:sanctum");
+
+Route::POST('ajoutclient', [CommandeController::class,"ajouterClient"])->middleware("auth:sanctum");
