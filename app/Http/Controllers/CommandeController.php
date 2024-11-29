@@ -55,4 +55,15 @@ class CommandeController extends Controller
             $erreur = $e->getMessage();
         }
     }
+
+    public function ajouterClient(Request $request){
+        $client = new Client();
+        $client->nom=$request->json('nom');
+        $client->prenom=$request->json('prenom');
+        $client->email=$request->json('email');
+        $client->password=hash('SHA256','password');
+        $client->save();
+        return response()->json(['status'=>'Client créée','data'=>$client]);
+
+    }
 }
