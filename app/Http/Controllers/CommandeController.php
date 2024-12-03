@@ -57,13 +57,25 @@ class CommandeController extends Controller
     }
 
     public function ajouterClient(Request $request){
-        $client = new Client();
-        $client->nom=$request->json('nom');
-        $client->prenom=$request->json('prenom');
-        $client->email=$request->json('email');
-        $client->password=hash('SHA256','password');
-        $client->save();
-        return response()->json(['status'=>'Client créée','data'=>$client]);
+        try {
+            $client = new Client();
+            $client_email = Client::select(['email'])->get();
+            $client->nom = $request->json('nom');
+            $client->prenom = $request->json('prenom');
+            $mail_client = $client->email = $request->json('email');
+            $client->password = bcrypt($request->json('password'));
+            foreach ($client_email as $email) {
+                if ($email == $mail_client) {
+                    $erreur = "L'email a déjà été utilisé. Veuillez saisir un nouvel email";
+                } else {
+                    $client->save();
+                }
+            }
+
+            return response()->json(['status' => 'Client créée', 'data' => $client]);
+        }catch(\Exception $e){
+            $erreur = $e->getMessage();
+        }
 
     }
 }
